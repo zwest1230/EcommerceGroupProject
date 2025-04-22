@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Your Past Orders</h1>
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.OrderID }}</td>
+            <td>{{ order.BillingName }}</td>
+            <td>{{ order.Address }}</td>
+            <td>${{ order.amount_usd }}</td>
+            <td>
+              {% if not order.settled and not order.is_cancelled %}
+                <button onclick="cancelOrder({{ order.OrderID }})">Cancel</button>
+              {% elif order.is_cancelled %}
+                <span style="color: red;">Cancelled</span>
+              {% else %}
+                <span style="color: gray;">Settled</span>
+              {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/">Back to Home</a>
+
+    <script>
+        async function cancelOrder(orderId) {
+          if (!confirm(`Are you sure you want to cancel order #${orderId}?`)) return;
+      
+          const email = prompt("Enter your email to confirm:");
+          if (!email) return;
+      
+          const res = await fetch("/cancel-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ order_id: orderId, email })
+          });
+      
+          const data = await res.json();
+          alert(data.message);
+      
+          if (data.success) {
+            location.reload();
+          }
+        }
+      </script>
+
+<script>
+  async function cancelOrder(orderId) {
+    if (!confirm(`Cancel order #${orderId}?`)) return;
+
+    const res = await fetch("/cancel-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order_id: orderId, email: "{{ session['email'] }}" })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.success) {
+      location.reload();
+    }
+  }
+</script>
+</body>
+</html>

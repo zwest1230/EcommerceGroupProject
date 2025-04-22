@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Point of Sale System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #c87878;
+    }
+    header {
+      background-color: #783a3a;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      background: #953636;
+      display: flex;
+      justify-content: center;
+    }
+    nav ul li {
+      margin: 0 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+    main {
+      padding: 20px;
+    }
+    section {
+      background: white;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #333;
+      color: white;
+      position: relative;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Warehouse Inventory Portal</h1>
+    <nav>
+      <ul>
+        <li><a href="#inventory">Inventory</a></li>
+        <li><a href="#sales">Sales</a></li>
+        <li><a href="#reports">Reports</a></li>
+        <li><a href="#logout" onclick="location.href='/logout'">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="inventory">
+      <h2>Inventory Actions</h2>
+      <label for="inventory-action">Select Action:</label>
+      <select id="inventory-action">
+        <option value="add">Add Stock</option>
+        <option value="update">Update Quantity</option>
+        <option value="remove">Remove Product</option>
+      </select>
+
+      <div id="inventory-form-container" style="margin-top: 1em;"></div>
+    </section>
+
+    <section id="sales">
+      <h2>Order Settlement</h2>
+      <form id="settle-form">
+        <label for="settle-order-id">Order ID:</label>
+        <input type="number" id="settle-order-id" required>
+
+        <div id="order-info-box" style="margin: 1em 0; font-style: italic;"></div>
+
+        <label for="settle-final-amount">Final Amount ($):</label>
+        <input type="number" step="0.01" id="settle-final-amount" required>
+
+        <button type="submit">Settle Order</button>
+      </form>
+
+      <div id="settle-result" style="margin-top: 1em; font-weight: bold;"></div>
+    </section>
+
+    <section id="reports">
+      <h2>Reports</h2>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 POS System. All rights reserved.
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const sections = document.querySelectorAll("section");
+      const navLinks = document.querySelectorAll("nav ul li a");
+      const formContainer = document.getElementById("inventory-form-container");
+      const actionSelect = document.getElementById("inventory-action");
+
+      navLinks.forEach(link => {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          const targetId = this.getAttribute("href").substring(1);
+          sections.forEach(section => {
+            section.style.display = section.id === targetId ? "block" : "none";
+          });
+        });
+      });
+
+      sections.forEach((section, index) => {
+        section.style.display = index === 0 ? "block" : "none";
+      });
+
+      actionSelect.addEventListener("change", () => renderForm(actionSelect.value));
+      renderForm(actionSelect.value); 
+
+      function renderForm(action) {
+        let html = "";
+        if (action === "add" || action === "update") {
+          html = `
+            <h3>${action === "add" ? "Add Stock" : "Update Stock"}</h3>
+            <form id="inventory-form">
+              <input type="number" name="product_id" placeholder="Product ID" required><br>
+              <select name="size">
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+              </select><br>
+              <input type="number" name="quantity" placeholder="Quantity" required><br>
+              <button type="submit">${action === "add" ? "Add" : "Update"}</button>
+            </form>
+            <div id="inventory-result" style="margin-top: 1em; font-weight: bold;"></div>
+          `;
+        } else if (action === "remove") {
+          html = `
+            <h3>Remove Product</h3>
+            <form id="inventory-form">
+              <input type="number" name="product_id" placeholder="Product ID" required><br>
+              <button type="submit">Remove</button>
+            </form>
+            <div id="inventory-result" style="margin-top: 1em; font-weight: bold;"></div>
+          `;
+        }
+        formContainer.innerHTML = html;
+        attachFormHandler(action);
+      }
+
+      function attachFormHandler(action) {
+        const form = document.getElementById("inventory-form");
+        const resultBox = document.getElementById("inventory-result");
+        if (!form) return;
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const data = Object.fromEntries(new FormData(form).entries());
+          data.product_id = parseInt(data.product_id);
+          if (data.quantity !== undefined) data.quantity = parseInt(data.quantity);
+
+          let url = "/api/inventory/update";
+
+          data.action = action;
+
+          fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          })
+          .then(res => res.json())
+          .then(response => {
+            if (response.success) {
+              resultBox.textContent = "✅ Action completed successfully.";
+              resultBox.style.color = "green";
+            } else {
+              resultBox.textContent = "❌ " + response.message;
+              resultBox.style.color = "red";
+            }
+          })
+          .catch(() => {
+            resultBox.textContent = "❌ Network error.";
+            resultBox.style.color = "red";
+          });
+        });
+      }
+
+      const settleForm = document.getElementById("settle-form");
+      settleForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const orderId = parseInt(document.getElementById("settle-order-id").value);
+        const finalAmount = parseFloat(document.getElementById("settle-final-amount").value);
+
+        fetch("/settle-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ order_id: orderId, final_amount: finalAmount })
+        })
+        .then(res => res.json())
+        .then(data => {
+          const resultBox = document.getElementById("settle-result");
+          if (data.success) {
+            resultBox.innerText = "✅ Order settled successfully.";
+            resultBox.style.color = "green";
+          } else {
+            resultBox.innerText = "❌ " + data.message;
+            resultBox.style.color = "red";
+          }
+        })
+        .catch(() => {
+          document.getElementById("settle-result").innerText = "❌ Network error.";
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+

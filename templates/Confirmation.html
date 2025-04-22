@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 500px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #28a745;
+        }
+        p {
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Confirmed</h1>
+        <p>Thank you, <strong>{{ first_name }} {{ last_name }}</strong>!</p>
+        <p>Your order will be shipped to:</p>
+        <p><strong>{{ address }}, {{ city }}, {{ state }} {{ zip_code }}, {{ country }}</strong></p>
+        <p><strong>Shipping Speed:</strong> {{ shipping_speed }}</p>
+        <p><strong>Payment Method:</strong> {{ payment_method }}</p>
+        <p>Total (including tax): ${{ amount_usd }}</p>
+        <p>A confirmation email has been sent to: <strong>{{ email }}</strong></p>
+        <button onclick="location.href='/'">Continue Shopping</button>
+    </div>
+</body>
+</html>

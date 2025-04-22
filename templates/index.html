@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Store.based</title>
+    <meta name='viewport' content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="static/css/min.css">
+    <link rel="stylesheet" href="static/css/index.css">
+  </head>
+  <body>
+    <nav class="nav" tabindex="-1" onclick="this.focus()">
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="nav-left">
+          <a class="pagename current" href="/">Home</a>
+          {% if 'email' not in user %}
+            <a href="{{ url_for('login') }}">Login</a>
+          {% endif %}
+        </div>
+        <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
+          {% if 'email' in user %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+          {% endif %}
+          <input id="theme-control" type="checkbox" class="toggle" onclick="toggleTheme(this)">
+        </div>
+      </div>
+    </nav>
+    <button class="btn-close btn btn-sm">x</button>
+    <div class="container">
+
+{% if user %}
+      <div class="hero">
+        <h3>Welcome, {{ user.email }}</h3>
+      </div>
+{% endif %}
+
+{% if products %}
+<div class="hero">
+  <h1>Product List</h1>
+</div>
+<div class="row products-container">
+  {% for product in products %}
+    <div class="col c4 product-card" data-id="{{ product.product_id }}">
+      <img class="product-img" src="{{ url_for('static', filename='images/' + product.image_url) }}"/>
+      <h2 class="product-name">{{ product.name }}</h2>
+      <p class="product-price">${{ product.price_usd }}</p>
+
+      <ul class="size-options">
+        {% for size in ['small', 'medium', 'large'] %}
+          {% set qty = product.sizes.get(size, 0) %}
+          <li>
+            {{ size.capitalize() }}
+            {% if qty > 0 %}
+              <select class="size-selector" data-size="{{ size }}">
+                {% for i in range(0, qty + 1) %}
+                  <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+            {% else %}
+              <span style="color: red; font-weight: bold;">Out of Stock</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}  
+    </div>
+
+    <div id="cart-container">
+      <h3>Cart</h3>
+      <p>Small Shirts: <span id="qty-small">0</span></p>
+      <p>Medium Shirts: <span id="qty-medium">0</span></p>
+      <p>Large Shirts: <span id="qty-large">0</span></p>
+      <p>Total Shirts: <span id="qty-total">0</span></p>
+      <p>Price: $<span id="price-per-unit">14.99</span></p>
+      <br>
+      <p>Subtotal: $<span id="subtotal">0.00</span></p>
+      <a href="{{ url_for('checkout') }}" class="btn-link">Checkout</a>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.6/marked.min.js"></script>
+    <script src="/static/js/index.js"></script>
+  </body>
+</html>

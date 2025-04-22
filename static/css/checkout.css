@@ -1,0 +1,110 @@
+.checkout-box {
+  max-width: 800px;
+  margin: 15px auto;
+  background-color: var(--background);
+  color: var(--font-color);
+  padding: 20px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.card-logo-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    padding: 5px 0;
+}
+
+.card-logo {
+    width: 60px;
+    height: auto;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.card-logo.faded {
+    opacity: 0.3;
+}
+
+.card-logo.highlight {
+    opacity: 1;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border 0.3s ease-in-out;
+}
+
+.form-group input:focus {
+    border-color: #0077cc;
+    outline: none;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+}
+
+.button {
+    background: var(--nav-background);
+    background-color: var(--background);
+    color: var(--nav-font-color);
+    color: var(--font-color);
+    padding: 12px;
+    border: none;
+    border: var(--input-border);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+.button:hover {
+    background: #005fa3;
+}
+
+.form-group2 {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.form-group2 label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group2 input {
+    width: 99%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border 0.3s ease-in-out;
+}
+
+.form-group2 input:focus {
+    border-color: #0077cc;
+    outline: none;
+}

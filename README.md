@@ -94,6 +94,7 @@ store_db.mwb    ← Database model
 
 
 👥 Team Roles
+
 Frontend & UI Logic – Grayson Glazier, Alan Hardeman
 
 Database & Backend Integration – Lance West

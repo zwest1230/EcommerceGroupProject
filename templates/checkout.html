@@ -320,6 +320,25 @@ document.getElementById("billingForm").addEventListener("submit", function (e) {
   });
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const cardNumberInput = document.getElementById('cardNumber');
+    const cardCcvInput = document.getElementById('cardCcv');
+    const toggleBtn = document.getElementById('toggleVisibility');
+
+    // Set initial input types to "password"
+    cardNumberInput.type = 'password';
+    cardCcvInput.type = 'password';
+
+    toggleBtn.addEventListener('click', function () {
+      const isMasked = cardNumberInput.type === 'password';
+      cardNumberInput.type = isMasked ? 'text' : 'password';
+      cardCcvInput.type = isMasked ? 'text' : 'password';
+      toggleBtn.textContent = isMasked ? 'Hide Card Info' : 'Show Card Info';
+    });
+  });
+</script>
+
 <script src="/static/js/index.js"></script>
 </body>
 </html>

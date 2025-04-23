@@ -91,14 +91,16 @@ Edit
 
 server.py       ← Flask backend
 store_db.mwb    ← Database model
+
+
 👥 Team Roles
-Frontend & UI Logic – [Name]
+Frontend & UI Logic – Grayson Glazier, Alan Hardeman
 
-Database & Backend Integration – [Name]
+Database & Backend Integration – Lance West
 
-Testing & Validation – [Name]
+Testing & Validation – Grayson Glazier, Alan Hardeman, Lance West, Ryan Schultz
 
-Warehouse Functionality & API Design – [Name]
+Warehouse Functionality & API Design – Ryan Schultz
 
 ✅ Completed Milestones
 Guest checkout and session handling

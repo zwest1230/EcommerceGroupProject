@@ -151,11 +151,10 @@ def process_order():
 
     print("📦 RAW REQUEST DATA:", data)
 
-    # Determine mock endpoint
     card_number = data.get("card_number", "")
-    if card_number.startswith("4"):
+    if card_number.endswith("4"):
         mock_url = "https://e7642f03-e889-4c5c-8dc2-f1f52461a5ab.mock.pstmn.io/get?authorize=success"
-    elif card_number.startswith("5"):
+    elif card_number.endswith("5"):
         mock_url = "https://e7642f03-e889-4c5c-8dc2-f1f52461a5ab.mock.pstmn.io/get?authorize=insufficient"
     else:
         mock_url = "https://e7642f03-e889-4c5c-8dc2-f1f52461a5ab.mock.pstmn.io/get?authorize=carddetails"
@@ -183,6 +182,7 @@ def process_order():
                 "success": False,
                 "message": payment_data.get("Reason", "Authorization declined.")
             }), 400
+
         auth_token = payment_data.get("AuthorizationToken")
         auth_amount = payment_data.get("AuthorizedAmount")
         auth_expiration = payment_data.get("TokenExpirationDate")
